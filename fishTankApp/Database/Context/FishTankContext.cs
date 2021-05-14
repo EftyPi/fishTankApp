@@ -13,6 +13,9 @@ namespace fishTankApp.Database.Context
         public DbSet<Breed> Breed { get; set; }
         public DbSet<Decoration> Decoration { get; set; }
         public DbSet<Plant> Plant { get; set; }
+        public DbSet<FishTank> FishTank { get; set; }
+
+
         public FishTankContext(DbContextOptions options) : base(options)
         {
             

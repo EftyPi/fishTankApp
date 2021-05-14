@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using fishTankApp.Database.Context;
 
 namespace fishTankApp.Migrations
 {
     [DbContext(typeof(FishTankContext))]
-    partial class FishTankContextModelSnapshot : ModelSnapshot
+    [Migration("20210514075253_AddedFishTankToDb")]
+    partial class AddedFishTankToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +52,6 @@ namespace fishTankApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FishTankId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
@@ -67,11 +62,7 @@ namespace fishTankApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FishTankId");
-
                     b.ToTable("Decoration");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Decoration");
                 });
 
             modelBuilder.Entity("fishTankApp.Models.Fish", b =>
@@ -87,9 +78,6 @@ namespace fishTankApp.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FishTankId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -101,8 +89,6 @@ namespace fishTankApp.Migrations
 
                     b.HasIndex("BreedId");
 
-                    b.HasIndex("FishTankId");
-
                     b.ToTable("Fish");
                 });
 
@@ -112,9 +98,6 @@ namespace fishTankApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AvailableCapacity")
-                        .HasColumnType("int");
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
@@ -126,16 +109,26 @@ namespace fishTankApp.Migrations
 
             modelBuilder.Entity("fishTankApp.Models.Plant", b =>
                 {
-                    b.HasBaseType("fishTankApp.Models.Decoration");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasDiscriminator().HasValue("Plant");
-                });
+                    b.Property<string>("Colour")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-            modelBuilder.Entity("fishTankApp.Models.Decoration", b =>
-                {
-                    b.HasOne("fishTankApp.Models.FishTank", null)
-                        .WithMany("Items")
-                        .HasForeignKey("FishTankId");
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plant");
                 });
 
             modelBuilder.Entity("fishTankApp.Models.Fish", b =>
@@ -144,18 +137,7 @@ namespace fishTankApp.Migrations
                         .WithMany()
                         .HasForeignKey("BreedId");
 
-                    b.HasOne("fishTankApp.Models.FishTank", null)
-                        .WithMany("Fishes")
-                        .HasForeignKey("FishTankId");
-
                     b.Navigation("Breed");
-                });
-
-            modelBuilder.Entity("fishTankApp.Models.FishTank", b =>
-                {
-                    b.Navigation("Fishes");
-
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

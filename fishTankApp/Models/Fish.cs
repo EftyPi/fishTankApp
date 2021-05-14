@@ -6,7 +6,7 @@ namespace fishTankApp.Models
     public class Fish : Entity
     {
         [Required]
-        public Breed Breed { get; set; }
+        public Breed Breed { get; private set;  }
         
         [Required]
         public DateTime DateOfBirth { get; set; }
@@ -17,5 +17,12 @@ namespace fishTankApp.Models
         
         [StringLength(255)]
         public string? Name { get; set; }
+
+
+        public void SetBreed(Breed breed)
+        {
+            Breed = breed;
+            Size = breed.Size;
+        }
     }
 }
